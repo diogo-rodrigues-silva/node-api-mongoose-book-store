@@ -1,5 +1,6 @@
 'use strict';
 
+const httpStatus = require('http-status-codes');
 const Book = require('../models/book.model');
 
 exports.getAll = function (req, res, next) {
@@ -7,9 +8,9 @@ exports.getAll = function (req, res, next) {
     Book.find({
 
     }).then(data => {
-        res.status(200).send(data);
-    }).catch(e => {
-        res.status(400).send(e);
+        res.status(httpStatus.OK).send(data);
+    }).catch(error => {
+        res.status(httpStatus.BAD_REQUEST).send(error);
     });
 };
 
@@ -17,9 +18,9 @@ exports.getOne = function (req, res, next) {
     Book.findOne({
         _id: req.params.id
     }).then(data => {
-        res.status(200).send(data);
-    }).catch(e => {
-        res.status(400).send(e);
+        res.status(httpStatus.OK).send(data);
+    }).catch(error => {
+        res.status(httpStatus.BAD_REQUEST).send(error);
     });
 }
 
@@ -37,9 +38,9 @@ exports.create = function (req, res, next) {
             category: req.body.category
         })
     ).then(data => {
-        res.status(200).send(data);
-    }).catch(e => {
-        res.status(400).send(e);
+        res.status(httpStatus.OK).send(data);
+    }).catch(error => {
+        res.status(httpStatus.BAD_REQUEST).send(error);
     });
 }
 
@@ -58,12 +59,9 @@ exports.update = function (req, res, next) {
             upsert: true
         }
     ).then(data => {
-        res.json(data).status(201);
-    }).catch(e => {
-        res.status(400).send({
-            message: 'Falha ao cadastrar o produto',
-            data: e
-        });
+        res.status(httpStatus.CREATED).send(data);
+    }).catch(error => {
+        res.status(httpStatus.BAD_REQUEST).send(error);
     });
 }
 
@@ -71,11 +69,8 @@ exports.delete = function (req, res, next) {
     Book.findByIdAndDelete({
         _id: req.params.id
     }).then(data => {
-        res.json(data).status(201);
-    }).catch(e => {
-        res.status(400).send({
-            message: 'Falha ao cadastrar o produto',
-            data: e
-        });
+        res.status(httpStatus.NO_CONTENT).send(data);
+    }).catch(error => {
+        res.status(httpStatus.BAD_REQUEST).send(error);
     })
 }
